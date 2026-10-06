@@ -1,24 +1,31 @@
 #!/bin/bash 
+
 echo "" > bin.txt
 
 REPO_URL="https://github.com/canigou101/compteur-points-rasp"
-
-
 dest="/home/pi/Desktop/app"
 
 sleep 15
 
-if [ping 8.8.8.8]then
-	echo "j'ai de la co" >> bin.txt
-	if [pgrep -f "&dest"]then
-		git pull origin main
-	else
-		git clone "&source"	
-	fi
+# Verification de la connexion Internet (-c 1 envoie 1 seul paquet)
+if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
+    echo "j'ai de la co" >> bin.txt
+    
+    # Verification si le dossier de destination existe deja
+    if [ -d "$dest" ]; then
+        cd "$dest" || exit 1
+        git pull origin main
+    else
+        git clone "$REPO_URL" "$dest"
+    fi
 else 
-  echo "j'ai pas de co" >> bin.txt
-
+    echo "j'ai pas de co" >> bin.txt
 fi
-
-cd "$dest"
-python3 "$dest/main.py"
+sleep 15
+# Lancement du script Python
+if [ -d "$dest" ]; then
+    cd "$dest" || exit 1
+    python3 "$dest/main.py"
+else
+    echo "Erreur : le dossier de l'application n'existe pas." >> bin.txt
+fi
