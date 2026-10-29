@@ -1,12 +1,14 @@
-from .joueur import joueur
+from src.model import Joueur
 
-class equipe:
-    """
-   equipe du sport 
+class Equipe:
 
-    """
+    NomEquipe:str
+    Joueurs : list[Joueur]
+    
+    def __init__(self, S:str):
+        self.NomEquipe=S
+        self.Joueurs=[]
 
-    nom : str
-    """nom de l'equipe"""
-    joueurs : list[joueur]
-    """joueur dans l'équipe"""
+
+    def ajoutJoueur(self,J:Joueur):
+        self.Joueurs.append(J)
